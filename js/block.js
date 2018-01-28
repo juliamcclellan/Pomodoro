@@ -12,7 +12,7 @@ function updateListener(tabId, changeInfo, tab) {
 
 function block(url, id) {
   if(url != undefined && getHostName(url) == "facebook.com") {//url.includes("facebook.com")) {
-    chrome.tabs.update(id, {url: "https://www.google.com"});
+    chrome.tabs.update(id, {url: "html/redirect.html"});
   }
 };
 
