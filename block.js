@@ -11,13 +11,12 @@ function updateListener(tabId, changeInfo, tab) {
 }
 
 function block(url, id) {
-  if(url != undefined && url.includes("facebook.com")) {
+  if(url != undefined && getHostName(url) == "facebook.com") {//url.includes("facebook.com")) {
     chrome.tabs.update(id, {url: "https://www.google.com"});
   }
 };
 
 // From primaryobjects.com
-/*
 function getHostName(url) {
     var match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i);
     if (match != null && match.length > 2 && typeof match[2] === 'string' && match[2].length > 0) {
@@ -27,4 +26,3 @@ function getHostName(url) {
         return null;
     }
 }
-*/
