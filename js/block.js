@@ -1,6 +1,19 @@
 chrome.tabs.onCreated.addListener(createdListener);
 chrome.tabs.onUpdated.addListener(updateListener);
 
+chrome.storage.local.get(["blockedDomains", "blockedPages"], function(blocked) {
+  if(!Array.isArray(blocked.blockedDomains)) {
+    set({blockedDomains: []}, function(a) {
+      addBlockedDomain("https://www.facebook.com/alldhkjshdkl");
+    });
+  }
+  if(!Array.isArray(blocked.blockedPages)) {
+    set({blockedDomains: []}, function(a) {
+      addBlockedPage("https://www.w3schools.com/jsref/jsref_isarray.asp");
+    });
+  }
+});
+
 function createdListener(tab) {
   block(tab.url, tab.id);
 }
@@ -9,6 +22,34 @@ function updateListener(tabId, changeInfo, tab) {
   block(changeInfo.url, tab.id);
 }
 
+function addBlockedPage(url) {
+  chrome.storage.local.get("blockedPages", function(blocked) {
+    if(blocked != undefined && Array.isArray(blocked)) {
+      if(!blocked.blockedPages.includes(url)) {
+        blocked.blockedPages.push(url);
+        chrome.storage.local.set({"blockedPages": blocked.blockedPages});
+      }
+    } else {
+      chrome.storage.local.set({"blockedPages": [url]});
+    }
+  });
+}
+
+function addBlockedDomain(url) {
+  url = getHostName(url);
+  chrome.storage.local.get("blockedDomains", function(blocked) {
+    if(blocked != undefined && Array.isArray(blocked)) {
+      if(!blocked.blockedDomains.includes(url)) {
+        blocked.blockedDomains.push(url);
+        chrome.storage.local.set({"blockedDomains": blocked.blockedDomains});
+      }
+    } else {
+      chrome.storage.local.set({"blockedDomains": [url]});
+    }
+  });
+}
+
+
 function block(url, id) {
   chrome.storage.local.get(["blockedPages", "blockedDomains"], function(blocked) {
     if(blocked != undefined && url != undefined) {
@@ -16,10 +57,7 @@ function block(url, id) {
 
       var pages = blocked.blockedPages;
       for (i = 0; i < pages.length; i++) {
-        console.log(pages[i]);
-        console.log(url);
         if(pages[i] === url) {
-          console.log("here");
           bool = true;
           break;
         }
@@ -28,7 +66,6 @@ function block(url, id) {
       if(!bool) {
         url = getHostName(url);
         var domains = blocked.blockedDomains;
-        //console.log(domains);
         for (i = 0; i < domains.length; i++) {
           if(domains[i] === url) {
             bool = true;
