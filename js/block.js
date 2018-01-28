@@ -11,14 +11,15 @@ function updateListener(tabId, changeInfo, tab) {
 
 function block(url, id) {
   chrome.storage.local.get(["blockedPages", "blockedDomains"], function(blocked) {
-    console.log(blocked);
     if(blocked != undefined && url != undefined) {
       var bool = false;
 
       var pages = blocked.blockedPages;
-      //console.log(pages);
       for (i = 0; i < pages.length; i++) {
-        if(pages[i] == url) {
+        console.log(pages[i]);
+        console.log(url);
+        if(pages[i] === url) {
+          console.log("here");
           bool = true;
           break;
         }
@@ -29,7 +30,7 @@ function block(url, id) {
         var domains = blocked.blockedDomains;
         //console.log(domains);
         for (i = 0; i < domains.length; i++) {
-          if(domains[i] == url) {
+          if(domains[i] === url) {
             bool = true;
             break;
           }
