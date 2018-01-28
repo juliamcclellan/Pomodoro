@@ -1,18 +1,20 @@
 chrome.tabs.onCreated.addListener(createdListener);
 chrome.tabs.onUpdated.addListener(updateListener);
 
+
 chrome.storage.local.get(["blockedDomains", "blockedPages"], function(blocked) {
   if(!Array.isArray(blocked.blockedDomains)) {
     set({blockedDomains: []}, function(a) {
-      addBlockedDomain("https://www.facebook.com/alldhkjshdkl");
+      chrome.storage.local.set({blockedDomains: []});
     });
   }
   if(!Array.isArray(blocked.blockedPages)) {
     set({blockedDomains: []}, function(a) {
-      addBlockedPage("https://www.w3schools.com/jsref/jsref_isarray.asp");
+      chrome.storage.local.set({blockedPages: []});
     });
   }
 });
+//chrome.storage.local.set({blockedDomains: [], blockedPages: []});
 
 function createdListener(tab) {
   block(tab.url, tab.id);
